@@ -13,35 +13,32 @@ This project is the **frontend** of a todo list app, connected to an API develop
 - 🔥 **Axios (for HTTP requests)**
 - 🌍 **React Router (for navigation)**
 
-
-
 ## 📌 Main Features
 
 ✅ **User Management**  
 ✔️ List registered users  
 ✔️ Create new users  
-✔️ Edit/delete users  
+✔️ Edit/delete users
 
 ✅ **Task List Management**  
 ✔️ View all task lists of a user  
 ✔️ Create new lists  
-✔️ Modify/delete lists  
+✔️ Modify/delete lists
 
 ✅ **Task Management**  
 ✔️ Add tasks to a list  
 ✔️ Edit task title, description, and status  
 ✔️ Mark tasks as complete  
-✔️ Delete tasks  
+✔️ Delete tasks
 
 ✅ **Authentication (Future)**  
 ✔️ User registration and login  
-✔️ Protecting private routes  
+✔️ Protecting private routes
 
 ✅ **Optimized User Experience**  
 ✔️ Clean and responsive UI with Chakra UI  
 ✔️ Visual feedback with loaders and notifications  
-✔️ Error handling in API requests  
-
+✔️ Error handling in API requests
 
 ## 🚀 Installation and Configuration
 
@@ -87,12 +84,12 @@ Make sure the backend is running before making requests.
 
 | Command | Description |
 | ---------------- | ---------------------------------------------------- |
-| `npm run dev` | Start the application in development mode |
-| `npm run build` | Generate the production-optimized version |
-| `npm run lint` | Run the linter to detect errors in the code |
-| `npm run format` | Format the code with Prettier |
-
-
+| `npm run dev` | Starts the application in development mode |
+| `npm run build` | Builds the production-optimized version |
+| `npm run lint` | Runs the linter to detect errors in the code |
+| `npm run format` | Formats the code with Prettier |
+| `npm run lint:fix` | Runs the linter and automatically fixes problems if possible |
+| `npm run check` | Runs formatting and lint checking in one step |
 
 ### 📌 Contribute
 
@@ -123,16 +120,13 @@ git push origin feature-new-feature
 
 This project is licensed under the MIT License.
 
-
-***
+---
 
 # 📌 todo-list-spring-react-frontend
 
 🚀 **Aplicación de Lista de Tareas con React + Vite + TypeScript + Chakra UI**
 
 Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do List**), conectada a una API desarrollada en **Spring Boot**. Permite la gestión de usuarios, listas de tareas y tareas individuales.
-
-
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -142,8 +136,6 @@ Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do 
 - 🎨 **Chakra UI 2.10.6**
 - 🔥 **Axios (para peticiones HTTP)**
 - 🌍 **React Router (para la navegación)**
-
-
 
 ## 📌 Características Principales
 
@@ -171,8 +163,6 @@ Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do 
 ✔️ UI limpia y responsiva con Chakra UI  
 ✔️ Feedback visual con loaders y notificaciones  
 ✔️ Manejo de errores en las peticiones API
-
-
 
 ## 🚀 Instalación y Configuración
 
@@ -222,6 +212,8 @@ Asegúrate de que el backend esté corriendo antes de realizar peticiones.
 | `npm run build`  | Genera la versión optimizada para producción         |
 | `npm run lint`   | Ejecuta el linter para detectar errores en el código |
 | `npm run format` | Formatea el código con Prettier                      |
+| `npm run lint:fix` | Ejecuta el linter y corrige problemas automáticos si es posible |
+| `npm run check`  | Ejecuta el formateo y la verificación de lint en un solo paso |
 
 
 ### 📌 Contribuir
@@ -252,4 +244,3 @@ git push origin feature-nueva-funcionalidad
 ### 📄 Licencia
 
 Este proyecto está bajo la licencia MIT.
-
