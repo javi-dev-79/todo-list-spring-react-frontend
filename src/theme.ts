@@ -23,8 +23,12 @@ const theme = extendTheme({
     },
     warning: {
       500: '#745107'
+    },
+    neutral: {
+      500: '#CCCCCC' // Nuevo color neutro agregado
     }
   }
 })
 
 export default theme
+
