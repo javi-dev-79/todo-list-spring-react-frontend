@@ -1,54 +1,255 @@
-# React + TypeScript + Vite
+# 📌 todo-list-spring-react-frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **To-Do List App with React + Vite + TypeScript + Chakra UI**
 
-Currently, two official plugins are available:
+This project is the **frontend** of a todo list app, connected to an API developed in **Spring Boot**. It allows the management of users, task lists, and individual tasks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Technologies Used
 
-## Expanding the ESLint configuration
+- ⚛ **React 19**
+- ⚡ **Vite**
+- 📜 **TypeScript**
+- 🎨 **Chakra UI 2.10.6**
+- 🔥 **Axios (for HTTP requests)**
+- 🌍 **React Router (for navigation)**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+
+## 📌 Main Features
+
+✅ **User Management**  
+✔️ List registered users  
+✔️ Create new users  
+✔️ Edit/delete users  
+
+✅ **Task List Management**  
+✔️ View all task lists of a user  
+✔️ Create new lists  
+✔️ Modify/delete lists  
+
+✅ **Task Management**  
+✔️ Add tasks to a list  
+✔️ Edit task title, description, and status  
+✔️ Mark tasks as complete  
+✔️ Delete tasks  
+
+✅ **Authentication (Future)**  
+✔️ User registration and login  
+✔️ Protecting private routes  
+
+✅ **Optimized User Experience**  
+✔️ Clean and responsive UI with Chakra UI  
+✔️ Visual feedback with loaders and notifications  
+✔️ Error handling in API requests  
+
+
+## 🚀 Installation and Configuration
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-user/todo-list-spring-react-frontend.git
+cd todo-list-spring-react-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2️⃣ Install Dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Run the following command in the terminal to install all the necessary dependencies:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+### 3️⃣ Configure the API URL
+
+Create a **.env** file in the root of the project and define the API base URL:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+```
+
+### 4️⃣ Start the Development Server
+
+Run the following command to start the application in development mode:
+
+```bash
+npm run dev
+```
+
+The application will be available at http://localhost:5173.
+
+## 📡 Connecting to the Backend
+
+This frontend is designed to work with a **REST API** developed in **Spring Boot**.
+Make sure the backend is running before making requests.
+
+## 🛠️ Useful Commands
+
+| Command | Description |
+| ---------------- | ---------------------------------------------------- |
+| `npm run dev` | Start the application in development mode |
+| `npm run build` | Generate the production-optimized version |
+| `npm run lint` | Run the linter to detect errors in the code |
+| `npm run format` | Format the code with Prettier |
+
+
+
+### 📌 Contribute
+
+If you want to contribute to this project:
+
+1. Fork the repository.
+2. Create a new branch:
+
+```bash
+git checkout -b feature-new-feature`
+```
+
+3. Make your changes and commit:
+
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push your changes:
+
+```bash
+git push origin feature-new-feature
+```
+
+5. Create a Pull Request on GitHub.
+
+### 📄 License
+
+This project is licensed under the MIT License.
+
+
+***
+
+# 📌 todo-list-spring-react-frontend
+
+🚀 **Aplicación de Lista de Tareas con React + Vite + TypeScript + Chakra UI**
+
+Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do List**), conectada a una API desarrollada en **Spring Boot**. Permite la gestión de usuarios, listas de tareas y tareas individuales.
+
+
+
+## 🛠️ Tecnologías Utilizadas
+
+- ⚛ **React 19**
+- ⚡ **Vite**
+- 📜 **TypeScript**
+- 🎨 **Chakra UI 2.10.6**
+- 🔥 **Axios (para peticiones HTTP)**
+- 🌍 **React Router (para la navegación)**
+
+
+
+## 📌 Características Principales
+
+✅ **Gestión de Usuarios**  
+✔️ Listar usuarios registrados  
+✔️ Crear nuevos usuarios  
+✔️ Editar/eliminar usuarios
+
+✅ **Gestión de Listas de Tareas**  
+✔️ Ver todas las listas de tareas de un usuario  
+✔️ Crear nuevas listas  
+✔️ Modificar/eliminar listas
+
+✅ **Gestión de Tareas**  
+✔️ Añadir tareas a una lista  
+✔️ Editar título, descripción y estado de la tarea  
+✔️ Marcar tareas como completadas  
+✔️ Eliminar tareas
+
+✅ **Autenticación (Futuro)**  
+✔️ Registro e inicio de sesión de usuarios  
+✔️ Protección de rutas privadas
+
+✅ **Experiencia de Usuario Optimizada**  
+✔️ UI limpia y responsiva con Chakra UI  
+✔️ Feedback visual con loaders y notificaciones  
+✔️ Manejo de errores en las peticiones API
+
+
+
+## 🚀 Instalación y Configuración
+
+### 1️⃣ Clonar el Repositorio
+
+```bash
+git clone https://github.com/tu-usuario/todo-list-spring-react-frontend.git
+cd todo-list-spring-react-frontend
+```
+
+### 2️⃣ Instalar Dependencias
+
+Ejecuta el siguiente comando en la terminal para instalar todas las dependencias necesarias:
+
+```bash
+npm install
+```
+
+### 3️⃣ Configurar la URL de la API
+
+Crea un archivo **.env** en la raíz del proyecto y define la URL base de la API:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+```
+
+### 4️⃣ Iniciar el Servidor de Desarrollo
+
+Ejecuta el siguiente comando para iniciar la aplicación en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en http://localhost:5173.
+
+## 📡 Conexión con el Backend
+
+Este frontend está diseñado para trabajar con una **API REST** desarrollada en **Spring Boot**.  
+Asegúrate de que el backend esté corriendo antes de realizar peticiones.
+
+## 🛠️ Comandos Útiles
+
+| Comando          | Descripción                                          |
+| ---------------- | ---------------------------------------------------- |
+| `npm run dev`    | Inicia la aplicación en modo desarrollo              |
+| `npm run build`  | Genera la versión optimizada para producción         |
+| `npm run lint`   | Ejecuta el linter para detectar errores en el código |
+| `npm run format` | Formatea el código con Prettier                      |
+
+
+### 📌 Contribuir
+
+Si deseas contribuir a este proyecto:
+
+1. Haz un fork del repositorio.
+2. Crea una nueva rama:
+
+```bash
+git checkout -b feature-nueva-funcionalidad`
+```
+
+3. Realiza los cambios y haz un commit:
+
+```bash
+git commit -m "Añadir nueva funcionalidad"
+```
+
+4. Sube los cambios:
+
+```bash
+git push origin feature-nueva-funcionalidad
+```
+
+5. Crea un Pull Request en GitHub.
+
+### 📄 Licencia
+
+Este proyecto está bajo la licencia MIT.
+
