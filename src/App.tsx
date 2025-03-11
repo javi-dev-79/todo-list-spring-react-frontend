@@ -1,10 +1,10 @@
-import { Box, Heading, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import Header from './components/Header'
 
 function App() {
   return (
     <Box p={5}>
-      <Heading size="xl">Hello Chakra UI</Heading>
-      <Text>This is a simple test component</Text>
+      <Header />
     </Box>
   )
 }
