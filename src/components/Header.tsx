@@ -1,23 +1,26 @@
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { Box, Button, Flex, Heading, IconButton, Link, useColorMode, useTheme } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Link,
+  useColorMode,
+  useTheme
+} from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { authApi } from '../api/authApi'
+import { useAuth } from '../context/AuthContext'
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const navigate = useNavigate()
   const theme = useTheme()
-  const [isAuthenticated, setIsAuthenticated] = useState(authApi.isAuthenticated())
-
-  useEffect(() => {
-    setIsAuthenticated(authApi.isAuthenticated())
-  }, [])
+  const { isAuthenticated, logout } = useAuth() // 🔹 Ahora usamos el contexto global
 
   const handleAuthentication = () => {
     if (isAuthenticated) {
-      authApi.logout()
-      setIsAuthenticated(false)
+      logout()
       navigate('/')
     } else {
       navigate('/login')
@@ -44,16 +47,18 @@ const Header = () => {
           >
             INICIO
           </Link>
-          <Link
-            as={RouterLink}
-            to="/tasks"
-            fontSize="lg"
-            fontWeight={'bold'}
-            mr={8}
-            _hover={{ textDecoration: 'none' }}
-          >
-            TAREAS
-          </Link>
+          {isAuthenticated && (
+            <Link
+              as={RouterLink}
+              to="/tasks"
+              fontSize="lg"
+              fontWeight={'bold'}
+              mr={8}
+              _hover={{ textDecoration: 'none' }}
+            >
+              TAREAS
+            </Link>
+          )}
         </Flex>
 
         {/* Authentication Button */}

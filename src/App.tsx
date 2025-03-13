@@ -6,34 +6,34 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import TaskManager from './pages/TaskManager'
-import { authApi } from './api/authApi'
-import { JSX } from 'react'
+import UserManager from './pages/UserManager' // 🔹 Importamos UserManager
+import AdminRoute from './routes/AdminRoute'
+import PrivateRoute from './routes/PrivateRoute'
 
 function App() {
-
-  const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-    return authApi.isAuthenticated() ? children: <Navigate to="/login" />
-  }
   return (
     <Router>
       <Box minH="100vh" display="flex" flexDirection="column">
         <Header />
 
-        {/* Contenedor principal con padding para evitar que el Header lo cubra */}
         <Box flex="1" p={5} pt="150px" overflow="auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/tasks" element={<TaskManager />} />
             <Route
-              path="/tasks"
+              path="/admin/users"
               element={
-                <PrivateRoute>
-                  <TaskManager />
-                </PrivateRoute>
+                <AdminRoute>
+                  <UserManager />
+                </AdminRoute>
               }
             />
+            <Route element={<PrivateRoute />}>
+              <Route path="/tasks" element={<TaskManager />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>
 
