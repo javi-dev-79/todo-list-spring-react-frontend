@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { AppUser } from '../types/appUser'
 import { Role } from '../types/role'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -18,15 +17,18 @@ class AuthApi {
 
   public async login(email: string, password: string): Promise<string> {
     return axios
-      .post<{ token: string }>(`${API_BASE_URL}/auth/login`, { email, password })
+      .post<{ token: string; role: string }>(`${API_BASE_URL}/auth/login`, { email, password })
       .then((response) => {
-        const token = response.data.token
-        if (!token) throw new Error('No se recibió un token')
+        const { token, role } = response.data
+        if (!token || !role) throw new Error('No se recibió token o rol')
+
         this.setToken(token)
+        localStorage.setItem('role', role)
+        localStorage.setItem('user', JSON.stringify({ email, role }))
         return token
       })
       .catch((error) => {
-        console.error('Error en el login:', error)
+        console.error('❌ Error en el login:', error)
         throw error
       })
   }
@@ -48,7 +50,7 @@ class AuthApi {
 
   public logout(): void {
     localStorage.removeItem('token')
-    localStorage.removeItem('user') // Eliminamos también los datos del usuario
+    localStorage.removeItem('user')
   }
 
   public setToken(token: string): void {
@@ -59,9 +61,25 @@ class AuthApi {
     return localStorage.getItem('token')
   }
 
-  public getUser(): AppUser | null {
-    const user = localStorage.getItem('user')
-    return user ? (JSON.parse(user) as AppUser) : null
+  public getUser(): { email: string; role: string } | null {
+    try {
+      const user = localStorage.getItem('user')
+      if (!user) return null
+
+      const parsedUser = JSON.parse(user)
+
+      if (!parsedUser.email || !parsedUser.role) {
+        console.error('❌ `user` en localStorage está corrupto:', parsedUser)
+        localStorage.removeItem('user')
+        return null
+      }
+
+      return parsedUser
+    } catch (error) {
+      console.error('❌ Error al parsear user desde localStorage:', error)
+      localStorage.removeItem('user')
+      return null
+    }
   }
 
   public isAuthenticated(): boolean {

@@ -25,7 +25,10 @@ const theme = extendTheme({
       500: '#745107'
     },
     neutral: {
-      500: '#CCCCCC' // Nuevo color neutro agregado
+      500: '#CCCCCC'
+    },
+    update: {
+      500: '#0f56ae'
     }
   }
 })

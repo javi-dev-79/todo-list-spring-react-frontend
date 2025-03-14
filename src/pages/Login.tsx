@@ -11,7 +11,6 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import * as yup from 'yup'
@@ -46,16 +45,27 @@ const Login = () => {
     try {
       const token = await authApi.login(data.email, data.password)
       login(token)
-      toast({ title: 'Inicio de sesión exitoso', status: 'success', duration: 3000 })
-      navigate('/tasks')
+
+      setTimeout(() => {
+        const userRole = localStorage.getItem('role') || 'NO DEFINIDO'
+
+        console.log('🔹 Usuario autenticado:')
+        console.log('Email:', data.email)
+        console.log('Rol:', userRole)
+
+        toast({ title: 'Inicio de sesión exitoso', status: 'success', duration: 3000 })
+
+        if (userRole.trim().toUpperCase() === 'ADMIN') {
+          console.log('🔹 Redirigiendo a /admin/panel')
+          navigate('/admin/panel', { replace: true })
+        } else {
+          console.log('🔹 Redirigiendo a /tasks')
+          navigate('/tasks', { replace: true })
+        }
+      }, 100)
     } catch (err) {
-      const error = err as AxiosError<{ message?: string }>
-      toast({
-        title: 'Error al iniciar sesión',
-        description: error.response?.data?.message || 'Credenciales incorrectas',
-        status: 'error',
-        duration: 3000
-      })
+      console.error('❌ Error en el login:', err)
+      toast({ title: 'Error al iniciar sesión', status: 'error', duration: 3000 })
     }
   }
 
