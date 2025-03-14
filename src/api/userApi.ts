@@ -19,7 +19,10 @@ class UserApi {
   public async getUsers(): Promise<AppUser[]> {
     return axios
       .get(`${API_BASE_URL}/users`, { headers: authApi.getAuthHeaders() })
-      .then((response) => response.data)
+      .then((response) => {
+        console.log('🔹 Datos recibidos de la API:', response.data) // 🔹 Verificamos qué devuelve la API
+        return response.data
+      })
       .catch((error) => {
         console.error('Error obteniendo usuarios:', error)
         throw error
@@ -37,11 +40,41 @@ class UserApi {
   }
 
   public async updateUser(userId: string, updatedUser: Partial<AppUser>): Promise<AppUser> {
+    const token = localStorage.getItem('token')
+
+    console.log('🔹 Enviando a la API:', updatedUser)
+
     return axios
-      .put(`${API_BASE_URL}/users/${userId}`, updatedUser, { headers: authApi.getAuthHeaders() })
+      .put<AppUser>(`${API_BASE_URL}/users/${userId}`, updatedUser, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then((response) => response.data)
       .catch((error) => {
-        console.error(`Error actualizando usuario con id ${userId}:`, error)
+        console.error('❌ Error en updateUser:', error)
+        throw error
+      })
+  }
+
+  public async updateUserRole(userId: string, newRole: string): Promise<void> {
+    const token = localStorage.getItem('token')
+
+    console.log(`🔹 Cambiando rol del usuario ${userId} a ${newRole}`)
+
+    return axios
+      .put(
+        `${API_BASE_URL}/users/${userId}/role`,
+        { role: newRole },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      .then(() => console.log('✅ Rol actualizado correctamente'))
+      .catch((error) => {
+        console.error('❌ Error actualizando el rol:', error)
         throw error
       })
   }

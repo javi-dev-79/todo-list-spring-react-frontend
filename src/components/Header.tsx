@@ -16,7 +16,9 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const navigate = useNavigate()
   const theme = useTheme()
-  const { isAuthenticated, logout } = useAuth() // 🔹 Ahora usamos el contexto global
+  const { isAuthenticated, logout } = useAuth()
+
+  const userRole = localStorage.getItem('role')
 
   const handleAuthentication = () => {
     if (isAuthenticated) {
@@ -60,6 +62,19 @@ const Header = () => {
             </Link>
           )}
         </Flex>
+
+        {isAuthenticated && userRole === 'ADMIN' && (
+          <Link
+            as={RouterLink}
+            to="/admin/panel"
+            fontSize="lg"
+            fontWeight="bold"
+            mr={8}
+            _hover={{ textDecoration: 'none' }}
+          >
+            ADMIN PANEL
+          </Link>
+        )}
 
         {/* Authentication Button */}
         <Button bg={theme.colors.white} color={'primary.400'} onClick={handleAuthentication} p={4}>
