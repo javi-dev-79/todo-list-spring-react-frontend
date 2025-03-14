@@ -20,7 +20,7 @@ class UserApi {
     return axios
       .get(`${API_BASE_URL}/users`, { headers: authApi.getAuthHeaders() })
       .then((response) => {
-        console.log('🔹 Datos recibidos de la API:', response.data) // 🔹 Verificamos qué devuelve la API
+        console.log('🔹 Datos recibidos de la API:', response.data)
         return response.data
       })
       .catch((error) => {
@@ -35,6 +35,21 @@ class UserApi {
       .then((response) => response.data)
       .catch((error) => {
         console.error(`Error obteniendo usuario con id ${userId}:`, error)
+        throw error
+      })
+  }
+
+
+  public async getUserByEmail(email: string): Promise<AppUser> {
+    const token = localStorage.getItem('token')
+
+    return axios
+      .get<AppUser>(`${API_BASE_URL}/users/email/${email}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error(`❌ Error obteniendo usuario con email ${email}:`, error)
         throw error
       })
   }

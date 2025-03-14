@@ -26,7 +26,7 @@ class TaskApi {
         console.error('Error obteniendo tasks:', error)
         throw error
       })
-  }  
+  }
 
   public async fetchTaskById(
     userId: string,
@@ -43,14 +43,18 @@ class TaskApi {
   }
 
   public async addTask(userId: string, taskListId: string, task: Omit<Task, 'id'>): Promise<Task> {
+    const token = localStorage.getItem('token')
+
     return axios
-      .post<Task>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`, task)
+      .post<Task>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`, task, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .then((response) => {
-        console.log('Task añadida:', response.data)
+        console.log('✅ Task añadida correctamente:', response.data)
         return response.data
       })
       .catch((error) => {
-        console.error('Error añadiendo task:', error)
+        console.error('❌ Error añadiendo task:', error)
         throw error
       })
   }
