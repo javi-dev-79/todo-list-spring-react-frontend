@@ -30,10 +30,22 @@ const TaskManager = () => {
   const [endDate, setEndDate] = useState('')
 
   useEffect(() => {
-    if (!currentUser?.email) return
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+      console.error('❌ No hay token de autenticación')
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('CURRENTUSER es: ', currentUser)
+    if (!currentUser?.email) {
+      console.error('❌ currentUser no tiene un email válido:', currentUser)
+      return
+    }
 
     const fetchUser = async () => {
       try {
+        console.log('Llamada al user en el fetchUser de TaskManager.tsx: ')
         const userData = await userApi.getUserByEmail(currentUser.email)
         setAppUser(userData)
         console.log('✅ appUser obtenido:', userData)
@@ -46,15 +58,27 @@ const TaskManager = () => {
   }, [currentUser])
 
   useEffect(() => {
-    if (!appUser?.id || !appUser?.taskLists?.length) return
+    console.log('🔹 appUser en TaskManager:', appUser)
+
+    if (!appUser?.id) {
+      console.error('❌ No hay `appUser.id`. No se pueden obtener tareas.')
+      return
+    }
+
+    if (!appUser.taskLists?.length) {
+      console.warn('⚠ `appUser.taskLists` está vacío. No hay listas de tareas para el usuario.')
+      return
+    }
 
     const fetchTasks = async () => {
       try {
+        console.log('🔹 Obteniendo tareas para el usuario:', appUser.id)
         const userId = appUser.id
         const taskListId = appUser.taskLists[0].id
         const fetchedTasks = await taskApi.fetchTasks(userId, taskListId)
+
+        console.log('✅ Tareas obtenidas:', fetchedTasks)
         setTasks(fetchedTasks)
-        console.log('✅ Tareas cargadas:', fetchedTasks)
       } catch (error) {
         console.error('❌ Error obteniendo tareas:', error)
       }
@@ -64,27 +88,47 @@ const TaskManager = () => {
   }, [appUser])
 
   const handleAddTask = async () => {
-    if (!newTask.trim() || !appUser?.id || !appUser.taskLists?.length) return
+    if (!newTask.trim()) {
+      console.log('❌ Validación fallida: Título vacío')
+      return
+    }
+
+    if (!appUser || !appUser.taskLists || appUser.taskLists.length === 0) {
+      console.log('❌ Error: El usuario no tiene una lista de tareas asociada.')
+      return
+    }
+
+    console.log('✅ `appUser` cargado correctamente:', appUser)
 
     try {
       const userId = appUser.id
       const taskListId = appUser.taskLists[0].id
-      const createdTask = await taskApi.addTask(userId, taskListId, {
+
+      // 🔹 Convertir la fecha `endDate` al formato `yyyy-MM-ddTHH:mm:ssZ`
+      const formattedEndDate = endDate ? new Date(endDate).toISOString() : null
+
+      const taskToAdd = {
         title: newTask,
-        description: description,
-        endDate: endDate,
+        description,
+        endDate: formattedEndDate,
         taskStatus: TaskStatus.PENDING,
-        taskList: { id: taskListId, name: 'General' }
-      })
+        taskList: taskListId // ✅ Enviar solo el `UUID` en lugar de un objeto
+      }
 
-      console.log('✅ Tarea creada:', createdTask)
+      console.log('🔹 Intentando crear tarea:', taskToAdd)
+      const createdTask = await taskApi.addTask(userId, taskListId, taskToAdd)
 
-      const fetchedTasks = await taskApi.fetchTasks(userId, taskListId)
-      setTasks(fetchedTasks)
+      if (createdTask) {
+        console.log('✅ Tarea creada exitosamente:', createdTask)
 
-      setNewTask('')
-      setDescription('')
-      setEndDate('')
+        const updatedTasks = await taskApi.fetchTasks(userId, taskListId)
+        setTasks(updatedTasks)
+
+        setNewTask('')
+        setDescription('')
+        setEndDate('')
+        onClose()
+      }
     } catch (error) {
       console.error('❌ Error al crear tarea:', error)
     }

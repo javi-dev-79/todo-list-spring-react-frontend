@@ -39,23 +39,40 @@ class UserApi {
       })
   }
 
-
   public async getUserByEmail(email: string): Promise<AppUser> {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
+
+    console.log('El token obtenido en getUserByEmail es: ', token)
+
+    if (!token) {
+      console.error('❌ No hay token disponible, posible error de autenticación.')
+      throw new Error('No hay token de autenticación.')
+    }
+
+    console.log('🔹 Enviando solicitud GET para obtener usuario:', email)
+    console.log(`Token enviado en headers es: Bearer ${token}`)
 
     return axios
       .get<AppUser>(`${API_BASE_URL}/users/email/${email}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
-      .then((response) => response.data)
+      .then((response) => {
+        console.log('✅ Respuesta de getUserByEmail:', response.data)
+        return response.data
+      })
       .catch((error) => {
-        console.error(`❌ Error obteniendo usuario con email ${email}:`, error)
+        console.error(
+          `❌ Error obteniendo usuario con email ${email}:`,
+          error.response?.data || error
+        )
         throw error
       })
   }
 
   public async updateUser(userId: string, updatedUser: Partial<AppUser>): Promise<AppUser> {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
 
     console.log('🔹 Enviando a la API:', updatedUser)
 
@@ -73,7 +90,7 @@ class UserApi {
   }
 
   public async updateUserRole(userId: string, newRole: string): Promise<void> {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
 
     console.log(`🔹 Cambiando rol del usuario ${userId} a ${newRole}`)
 

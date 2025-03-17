@@ -23,7 +23,7 @@ function App() {
             <Route path="/register" element={<Register />} />
 
             {/* 🔹 Ruta protegida para usuarios autenticados */}
-            <Route element={<PrivateRoute />}>
+            <Route element={<PrivateRoute element={<TaskManager />} />}>
               <Route path="/tasks" element={<TaskManager />} />
             </Route>
 
