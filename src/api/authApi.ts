@@ -22,9 +22,10 @@ class AuthApi {
         const { token, role } = response.data
         if (!token || !role) throw new Error('No se recibió token o rol')
 
-        this.setToken(token)
-        localStorage.setItem('role', role)
-        localStorage.setItem('user', JSON.stringify({ email, role }))
+        sessionStorage.setItem('token', token)
+        sessionStorage.setItem('role', role)
+        sessionStorage.setItem('user', JSON.stringify({ email, role }))
+
         return token
       })
       .catch((error) => {
@@ -48,36 +49,36 @@ class AuthApi {
       })
   }
 
-  public logout(): void {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+  public getToken(): string | null {
+    return sessionStorage.getItem('token')
   }
 
   public setToken(token: string): void {
-    localStorage.setItem('token', token)
+    sessionStorage.setItem('token', token)
   }
 
-  public getToken(): string | null {
-    return localStorage.getItem('token')
+  public logout(): void {
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('user')
   }
 
   public getUser(): { email: string; role: string } | null {
     try {
-      const user = localStorage.getItem('user')
+      const user = sessionStorage.getItem('user')
       if (!user) return null
 
       const parsedUser = JSON.parse(user)
 
       if (!parsedUser.email || !parsedUser.role) {
-        console.error('❌ `user` en localStorage está corrupto:', parsedUser)
-        localStorage.removeItem('user')
+        console.error('❌ `user` en sessionStorage está corrupto:', parsedUser)
+        sessionStorage.removeItem('user')
         return null
       }
 
       return parsedUser
     } catch (error) {
-      console.error('❌ Error al parsear user desde localStorage:', error)
-      localStorage.removeItem('user')
+      console.error('❌ Error al parsear user desde sessionStorage:', error)
+      sessionStorage.removeItem('user')
       return null
     }
   }

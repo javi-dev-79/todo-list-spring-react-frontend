@@ -47,7 +47,7 @@ const Login = () => {
       login(token)
 
       setTimeout(() => {
-        const userRole = localStorage.getItem('role') || 'NO DEFINIDO'
+        const userRole = sessionStorage.getItem('role') || 'NO DEFINIDO'
 
         console.log('🔹 Usuario autenticado:')
         console.log('Email:', data.email)

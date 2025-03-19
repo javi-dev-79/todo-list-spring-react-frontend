@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Task } from '../types/task'
+import { TaskStatus } from '../types/taskStatus'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -16,17 +17,25 @@ class TaskApi {
   }
 
   public async fetchTasks(userId: string, taskListId: string): Promise<Task[]> {
+    const token = sessionStorage.getItem('token')
+
+    if (!token) {
+      console.error('❌ No hay token disponible, posible error de autenticación.')
+      throw new Error('No hay token de autenticación.')
+    }
+
+    console.log('🔹 Enviando solicitud GET para obtener tareas. Token:', token)
+
     return axios
-      .get<Task[]>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`)
-      .then((response) => {
-        console.log('Tasks recibidas desde el backend:', response.data)
-        return response.data
+      .get<Task[]>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`, {
+        headers: { Authorization: `Bearer ${token}` }
       })
+      .then((response) => response.data)
       .catch((error) => {
-        console.error('Error obteniendo tasks:', error)
+        console.error('❌ Error obteniendo tareas:', error.response?.data || error)
         throw error
       })
-  }  
+  }
 
   public async fetchTaskById(
     userId: string,
@@ -43,14 +52,18 @@ class TaskApi {
   }
 
   public async addTask(userId: string, taskListId: string, task: Omit<Task, 'id'>): Promise<Task> {
+    const token = sessionStorage.getItem('token')
+
     return axios
-      .post<Task>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`, task)
+      .post<Task>(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks`, task, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .then((response) => {
-        console.log('Task añadida:', response.data)
+        console.log('✅ Task añadida correctamente:', response.data)
         return response.data
       })
       .catch((error) => {
-        console.error('Error añadiendo task:', error)
+        console.error('❌ Error añadiendo task:', error)
         throw error
       })
   }
@@ -72,6 +85,29 @@ class TaskApi {
       })
       .catch((error) => {
         console.error(`Error actualizando task con id ${taskId}:`, error)
+        throw error
+      })
+  }
+
+  public async updateTaskStatus(
+    userId: string,
+    taskListId: string,
+    taskId: string,
+    newStatus: TaskStatus
+  ): Promise<Task> {
+    const token = sessionStorage.getItem('token')
+
+    return axios
+      .put<Task>(
+        `${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks/${taskId}/status`,
+        { taskStatus: newStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error('❌ Error actualizando estado de la tarea:', error.response?.data || error)
         throw error
       })
   }

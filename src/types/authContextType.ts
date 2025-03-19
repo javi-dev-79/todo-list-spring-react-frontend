@@ -1,5 +1,10 @@
+import { AppUser } from './appUser'
+
 export interface AuthContextType {
   isAuthenticated: boolean
-  login: (token: string) => void
+  isLoading: boolean
+  currentUser: AppUser | null
+  login: (token: string) => Promise<void>
   logout: () => void
+  refreshUser: () => Promise<void>
 }

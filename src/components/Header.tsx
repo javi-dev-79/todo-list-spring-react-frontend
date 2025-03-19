@@ -18,7 +18,7 @@ const Header = () => {
   const theme = useTheme()
   const { isAuthenticated, logout } = useAuth()
 
-  const userRole = localStorage.getItem('role')
+  const userRole = sessionStorage.getItem('role')
 
   const handleAuthentication = () => {
     if (isAuthenticated) {

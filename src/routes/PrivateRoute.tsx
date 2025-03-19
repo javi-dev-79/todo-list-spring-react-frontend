@@ -1,26 +1,49 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { authApi } from '../api/authApi'
+import { JSX, useEffect, useState } from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-const PrivateRoute = () => {
-  const { isAuthenticated } = useAuth()
-  const user = authApi.getUser()
+interface PrivateRouteProps {
+  element: JSX.Element
+  roles?: string[]
+}
 
-  console.log('🔹 PrivateRoute: Usuario autenticado?', isAuthenticated)
-  console.log('🔹 PrivateRoute: Rol del usuario:', user?.role)
+const PrivateRoute = ({ element, roles }: PrivateRouteProps) => {
+  const { isAuthenticated, isLoading, currentUser } = useAuth()
+  const location = useLocation()
+
+  const [isChecking, setIsChecking] = useState(true)
+
+  console.log('🔹 PrivateRoute ejecutándose...')
+  console.log('🔹 Usuario autenticado?', isAuthenticated)
+  console.log('🔹 isLoading?', isLoading)
+  console.log('🔹 Ruta actual:', location.pathname)
+
+  useEffect(() => {
+    console.log('🔹 PrivateRoute: Usuario autenticado?', isAuthenticated)
+    console.log('🔹 PrivateRoute: Rol del usuario:', currentUser?.role || 'NO DEFINIDO')
+    console.log('🔹 PrivateRoute: Ruta actual:', location.pathname)
+
+    if (!isLoading) {
+      console.log('🟡 Cargando autenticación...')
+      setIsChecking(false)
+    }
+  }, [isAuthenticated, isLoading, currentUser, location])
+
+  if (isLoading || isChecking) {
+    return null
+  }
 
   if (!isAuthenticated) {
-    console.log('❌ Usuario no autenticado, redirigiendo a /login')
+    console.error('❌ Usuario no autenticado, redirigiendo a /login')
     return <Navigate to="/login" replace />
   }
 
-  if (user?.role === 'ADMIN') {
-    console.log('✅ Usuario es ADMIN, redirigiendo a /admin/panel')
-    return <Navigate to="/admin/panel" replace={false} />
+  if (roles && !roles.includes(currentUser?.role || '')) {
+    console.error('❌ Usuario sin permisos para acceder a esta ruta.')
+    return <Navigate to="/unauthorized" replace />
   }
 
-  console.log('✅ Usuario es USER, mostrando /tasks')
-  return <Outlet />
+  return element
 }
 
 export default PrivateRoute

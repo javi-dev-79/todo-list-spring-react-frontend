@@ -49,7 +49,7 @@ const AdminPanel = () => {
     try {
       await userApi.updateUserRole(userId, newRole)
       toast({ title: 'Rol actualizado', status: 'success', duration: 3000 })
-      loadUsers() // Recargar la lista de usuarios
+      loadUsers()
     } catch (error) {
       console.error('❌ Error en la actualización del rol:', error)
       toast({ title: 'Error al actualizar rol', status: 'error', duration: 3000 })
