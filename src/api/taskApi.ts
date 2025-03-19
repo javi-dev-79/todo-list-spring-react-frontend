@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Task } from '../types/task'
+import { TaskStatus } from '../types/taskStatus'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
@@ -84,6 +85,29 @@ class TaskApi {
       })
       .catch((error) => {
         console.error(`Error actualizando task con id ${taskId}:`, error)
+        throw error
+      })
+  }
+
+  public async updateTaskStatus(
+    userId: string,
+    taskListId: string,
+    taskId: string,
+    newStatus: TaskStatus
+  ): Promise<Task> {
+    const token = sessionStorage.getItem('token')
+
+    return axios
+      .put<Task>(
+        `${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks/${taskId}/status`,
+        { taskStatus: newStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error('❌ Error actualizando estado de la tarea:', error.response?.data || error)
         throw error
       })
   }
