@@ -438,9 +438,14 @@ const TaskManager = () => {
 
       <Flex justify="space-between" mt={4} align="center">
         <Stack direction="row" spacing={2}>
-          <Button colorScheme="danger" onClick={handleDeleteCompletedTasks} size={['sm', 'md']}>
+          <Button
+            colorScheme="danger"
+            onClick={() => setIsDeleteAllModalOpen(true)}
+            size={['sm', 'md']}
+          >
             <DeleteIcon mr={1} /> Eliminar Completadas
           </Button>
+
           <Button
             colorScheme="danger"
             onClick={() => setIsDeleteExpiredModalOpen(true)}
