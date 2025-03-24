@@ -74,15 +74,16 @@ class TaskApi {
     taskId: string,
     updatedTask: Partial<Task>
   ): Promise<Task> {
+    const token = sessionStorage.getItem('token')
     return axios
       .put<Task>(
         `${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks/${taskId}`,
-        updatedTask
+        updatedTask,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       )
-      .then((response) => {
-        console.log(`Task con id ${taskId} actualizada:`, response.data)
-        return response.data
-      })
+      .then((response) => response.data)
       .catch((error) => {
         console.error(`Error actualizando task con id ${taskId}:`, error)
         throw error
