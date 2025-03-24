@@ -29,6 +29,9 @@ const theme = extendTheme({
     },
     update: {
       500: '#0f56ae'
+    },
+    ended: {
+      500: '#ff6161'
     }
   }
 })

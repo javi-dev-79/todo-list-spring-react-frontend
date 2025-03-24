@@ -113,11 +113,15 @@ class TaskApi {
   }
 
   public async deleteTask(userId: string, taskListId: string, taskId: string): Promise<void> {
+    const token = sessionStorage.getItem('token')
+
     return axios
-      .delete(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks/${taskId}`)
-      .then(() => console.log(`Task con id ${taskId} eliminada`))
+      .delete(`${API_BASE_URL}/users/${userId}/tasklists/${taskListId}/tasks/${taskId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(() => console.log(`✅ Tarea ${taskId} eliminada en backend`))
       .catch((error) => {
-        console.error(`Error eliminando task con id ${taskId}:`, error)
+        console.error('❌ Error eliminando tarea en backend:', error.response?.data || error)
         throw error
       })
   }
