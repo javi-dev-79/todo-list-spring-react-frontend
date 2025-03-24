@@ -6,16 +6,20 @@ import {
   Flex,
   Heading,
   IconButton,
+  Input,
   List,
   ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Text,
+  Textarea,
+  useColorModeValue,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
@@ -24,6 +28,7 @@ import { taskApi } from '../api/taskApi'
 import { userApi } from '../api/userApi'
 import AddTaskForm from '../components/AddTaskForm'
 import DeleteConfirmation from '../components/DeleteConfirmation'
+import UpdateConfirmation from '../components/UpdateConfirmation'
 import { useAuth } from '../context/AuthContext'
 import { AppUser } from '../types/appUser'
 import { Task } from '../types/task'
@@ -44,6 +49,14 @@ const TaskManager = () => {
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false)
   const [isDeleteExpiredModalOpen, setIsDeleteExpiredModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+
+  const taskBgColor = useColorModeValue('white', 'gray.700')
+  const completedTaskBgColor = useColorModeValue('gray.200', 'gray.600')
+  const expiredTaskBgColor = useColorModeValue('red.100', 'red.300')
+  const badgeBgColor = useColorModeValue('white', 'gray.300')
+  const addButtonBgColor = useColorModeValue('blue.500', 'blue.300')
+
 
   const openDeleteModal = (task: Task) => {
     setTaskToDelete(task)
@@ -254,6 +267,41 @@ const TaskManager = () => {
     setIsDeleteAllModalOpen(false)
   }
 
+  const confirmUpdateTask = async () => {
+    if (!selectedTask || !appUser?.id || !appUser.taskLists?.length) return
+
+    const userId = appUser.id
+    const taskListId = appUser.taskLists[0].id
+    const updatedTask = {
+      title: selectedTask.title,
+      description: selectedTask.description,
+      endDate: selectedTask.endDate ? new Date(selectedTask.endDate).toISOString() : null
+    }
+
+    try {
+      await taskApi.updateTask(userId, taskListId, selectedTask.id, updatedTask)
+      const refreshedTasks = await taskApi.fetchTasks(userId, taskListId)
+      setTasks(refreshedTasks)
+      toast({
+        title: 'Tarea modificada correctamente.',
+        status: 'success',
+        duration: 2000,
+        isClosable: true
+      })
+      onDescClose()
+      setIsUpdateModalOpen(false)
+    } catch (err) {
+      console.log(err)
+      toast({
+        title: 'Error modificando la tarea.',
+        status: 'error',
+        duration: 2000,
+        isClosable: true
+      })
+      setIsUpdateModalOpen(false)
+    }
+  }
+
   const handleDeleteCompletedTasks = async () => {
     if (!appUser?.id || !appUser.taskLists?.length) return
 
@@ -346,21 +394,21 @@ const TaskManager = () => {
 
       <Stack direction={['column', 'row']} justify={'space-between'} mb={4} spacing={[3, 4]}>
         <Stack direction={['column', 'row']} spacing={2}>
-          <Button colorScheme="update" borderRadius={'full'} size={['sm', 'md']}>
+          <Button bg="blue.500" color="white" borderRadius="full" size={['sm', 'md']}>
             Tareas
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+            <Box bg="white" color="black" py={1} px={3} borderRadius="full" ml={2}>
               {tasks.length}
             </Box>
           </Button>
           <Button colorScheme="green" borderRadius={'full'} size={['sm', 'md']}>
             Tareas Completadas{' '}
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+            <Box bg={badgeBgColor} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
               {tasks.filter((task) => task.taskStatus === TaskStatus.COMPLETED).length}
             </Box>
           </Button>
-          <Button colorScheme="ended" borderRadius={'full'} size={['sm', 'md']}>
-            Tareas Vencidas{' '}
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+          <Button bg="red.500" color="white" borderRadius="full" size={['sm', 'md']}>
+            Tareas Vencidas
+            <Box bg="white" color="black" py={1} px={3} borderRadius="full" ml={2}>
               {expiredTasksCount}
             </Box>
           </Button>
@@ -378,10 +426,10 @@ const TaskManager = () => {
             borderRadius={'md'}
             bg={
               isTaskExpired(task.endDate)
-                ? 'red.100'
+                ? expiredTaskBgColor
                 : task.taskStatus === TaskStatus.COMPLETED
-                  ? 'gray.200'
-                  : 'white'
+                  ? completedTaskBgColor
+                  : taskBgColor
             }
             textDecoration={task.taskStatus === TaskStatus.COMPLETED ? 'line-through' : 'none'}
             border={'1px solid'}
@@ -419,7 +467,7 @@ const TaskManager = () => {
                 </Text>
               </Flex>
               {isTaskExpired(task.endDate) && (
-                <Text color="red.500" fontSize="sm" fontWeight="bold">
+                <Text color="black" fontSize="sm" fontWeight="bold">
                   Vencida
                 </Text>
               )}
@@ -439,7 +487,9 @@ const TaskManager = () => {
       <Flex justify="space-between" mt={4} align="center">
         <Stack direction="row" spacing={2}>
           <Button
-            colorScheme="danger"
+            bg="red.500"
+            color="white"
+            _hover={{ bg: 'red.600' }}
             onClick={() => setIsDeleteAllModalOpen(true)}
             size={['sm', 'md']}
           >
@@ -447,7 +497,9 @@ const TaskManager = () => {
           </Button>
 
           <Button
-            colorScheme="danger"
+            bg="red.500"
+            color="white"
+            _hover={{ bg: 'red.600' }}
             onClick={() => setIsDeleteExpiredModalOpen(true)}
             size={['sm', 'md']}
           >
@@ -457,7 +509,8 @@ const TaskManager = () => {
 
         <IconButton
           icon={<AddIcon />}
-          colorScheme="blue"
+          bg={addButtonBgColor}
+          _hover={{ bg: useColorModeValue('blue.600', 'blue.400') }}
           aria-label="Add Task"
           onClick={onOpen}
           size={['md', 'lg']}
@@ -492,6 +545,14 @@ const TaskManager = () => {
         onCancel={() => setIsDeleteExpiredModalOpen(false)}
       />
 
+      <UpdateConfirmation
+        title="Modificar tarea"
+        message="¿Confirmas los cambios en esta tarea?"
+        onConfirm={confirmUpdateTask}
+        onCancel={() => setIsUpdateModalOpen(false)}
+        isOpen={isUpdateModalOpen}
+      />
+
       <AddTaskForm
         isOpen={isOpen}
         onClose={onClose}
@@ -507,20 +568,47 @@ const TaskManager = () => {
       <Modal isOpen={isDescOpen} onClose={onDescClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Descripción de la tarea</ModalHeader>
+          <ModalHeader>Modificar Tarea</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ChakraText fontWeight="bold" mb={2}>
-              {selectedTask?.title}
-            </ChakraText>
-            <ChakraText>{selectedTask?.description || 'No hay descripción disponible.'}</ChakraText>
-            <ChakraText mt={3} fontSize="sm" color="gray.500">
-              Fecha límite:{' '}
-              {selectedTask?.endDate
-                ? new Date(selectedTask.endDate).toLocaleDateString()
-                : 'Sin fecha'}
-            </ChakraText>
+            <Stack spacing={4}>
+              <ChakraText fontWeight="bold">Título</ChakraText>
+              <Input
+                value={selectedTask?.title || ''}
+                onChange={(e) =>
+                  setSelectedTask((prev) => prev && { ...prev, title: e.target.value })
+                }
+              />
+              <ChakraText fontWeight="bold">Descripción</ChakraText>
+              <Textarea
+                value={selectedTask?.description || ''}
+                onChange={(e) =>
+                  setSelectedTask((prev) => prev && { ...prev, description: e.target.value })
+                }
+              />
+              <ChakraText fontWeight="bold">Fecha límite</ChakraText>
+              <Input
+                type="date"
+                value={
+                  selectedTask?.endDate
+                    ? new Date(selectedTask.endDate).toISOString().split('T')[0]
+                    : ''
+                }
+                min={new Date().toISOString().split('T')[0]}
+                onChange={(e) =>
+                  setSelectedTask((prev) => prev && { ...prev, endDate: e.target.value })
+                }
+              />
+            </Stack>
           </ModalBody>
+          <ModalFooter>
+            <Button onClick={onDescClose} mr={3}>
+              Cancelar
+            </Button>
+            <Button colorScheme="update" onClick={() => setIsUpdateModalOpen(true)}>
+              Modificar
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>
