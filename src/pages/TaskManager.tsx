@@ -19,6 +19,7 @@ import {
   Stack,
   Text,
   Textarea,
+  useColorModeValue,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
@@ -49,6 +50,13 @@ const TaskManager = () => {
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false)
   const [isDeleteExpiredModalOpen, setIsDeleteExpiredModalOpen] = useState(false)
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+
+  const taskBgColor = useColorModeValue('white', 'gray.700')
+  const completedTaskBgColor = useColorModeValue('gray.200', 'gray.600')
+  const expiredTaskBgColor = useColorModeValue('red.100', 'red.300')
+  const badgeBgColor = useColorModeValue('white', 'gray.300')
+  const addButtonBgColor = useColorModeValue('blue.500', 'blue.300')
+
 
   const openDeleteModal = (task: Task) => {
     setTaskToDelete(task)
@@ -386,21 +394,21 @@ const TaskManager = () => {
 
       <Stack direction={['column', 'row']} justify={'space-between'} mb={4} spacing={[3, 4]}>
         <Stack direction={['column', 'row']} spacing={2}>
-          <Button colorScheme="update" borderRadius={'full'} size={['sm', 'md']}>
+          <Button bg="blue.500" color="white" borderRadius="full" size={['sm', 'md']}>
             Tareas
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+            <Box bg="white" color="black" py={1} px={3} borderRadius="full" ml={2}>
               {tasks.length}
             </Box>
           </Button>
           <Button colorScheme="green" borderRadius={'full'} size={['sm', 'md']}>
             Tareas Completadas{' '}
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+            <Box bg={badgeBgColor} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
               {tasks.filter((task) => task.taskStatus === TaskStatus.COMPLETED).length}
             </Box>
           </Button>
-          <Button colorScheme="ended" borderRadius={'full'} size={['sm', 'md']}>
-            Tareas Vencidas{' '}
-            <Box bg={'white'} color={'black'} py={1} px={3} borderRadius={'full'} ml={2}>
+          <Button bg="red.500" color="white" borderRadius="full" size={['sm', 'md']}>
+            Tareas Vencidas
+            <Box bg="white" color="black" py={1} px={3} borderRadius="full" ml={2}>
               {expiredTasksCount}
             </Box>
           </Button>
@@ -418,10 +426,10 @@ const TaskManager = () => {
             borderRadius={'md'}
             bg={
               isTaskExpired(task.endDate)
-                ? 'red.100'
+                ? expiredTaskBgColor
                 : task.taskStatus === TaskStatus.COMPLETED
-                  ? 'gray.200'
-                  : 'white'
+                  ? completedTaskBgColor
+                  : taskBgColor
             }
             textDecoration={task.taskStatus === TaskStatus.COMPLETED ? 'line-through' : 'none'}
             border={'1px solid'}
@@ -459,7 +467,7 @@ const TaskManager = () => {
                 </Text>
               </Flex>
               {isTaskExpired(task.endDate) && (
-                <Text color="red.500" fontSize="sm" fontWeight="bold">
+                <Text color="black" fontSize="sm" fontWeight="bold">
                   Vencida
                 </Text>
               )}
@@ -479,7 +487,9 @@ const TaskManager = () => {
       <Flex justify="space-between" mt={4} align="center">
         <Stack direction="row" spacing={2}>
           <Button
-            colorScheme="danger"
+            bg="red.500"
+            color="white"
+            _hover={{ bg: 'red.600' }}
             onClick={() => setIsDeleteAllModalOpen(true)}
             size={['sm', 'md']}
           >
@@ -487,7 +497,9 @@ const TaskManager = () => {
           </Button>
 
           <Button
-            colorScheme="danger"
+            bg="red.500"
+            color="white"
+            _hover={{ bg: 'red.600' }}
             onClick={() => setIsDeleteExpiredModalOpen(true)}
             size={['sm', 'md']}
           >
@@ -497,7 +509,8 @@ const TaskManager = () => {
 
         <IconButton
           icon={<AddIcon />}
-          colorScheme="blue"
+          bg={addButtonBgColor}
+          _hover={{ bg: useColorModeValue('blue.600', 'blue.400') }}
           aria-label="Add Task"
           onClick={onOpen}
           size={['md', 'lg']}
