@@ -169,7 +169,7 @@ Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do 
 ### 1️⃣ Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/todo-list-spring-react-frontend.git
+git clone https://github.com/javi-dev-79/todo-list-spring-react-frontend.git
 cd todo-list-spring-react-frontend
 ```
 
