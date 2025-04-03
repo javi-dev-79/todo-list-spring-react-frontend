@@ -45,7 +45,7 @@ This project is the **frontend** of a todo list app, connected to an API develop
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-user/todo-list-spring-react-frontend.git
+git clone https://github.com/javi-dev-79/todo-list-spring-react-frontend.git
 cd todo-list-spring-react-frontend
 ```
 
@@ -169,7 +169,7 @@ Este proyecto es el **frontend** de una aplicación de lista de tareas (**To-Do 
 ### 1️⃣ Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/todo-list-spring-react-frontend.git
+git clone https://github.com/javi-dev-79/todo-list-spring-react-frontend.git
 cd todo-list-spring-react-frontend
 ```
 
